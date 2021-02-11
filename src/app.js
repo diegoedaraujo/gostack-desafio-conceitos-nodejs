@@ -36,16 +36,16 @@ app.put("/repositories/:id", (request, response) => {
 
   if (findByIndex == -1) {
     return response.status(400).json({ error: "Repository does not exist." });
-  } else {
-    const repository = {
-      id,
-      title,
-      url,
-      techs,
-      likes: repositories[findByIndex].likes,
-    };
-    repositories[findByIndex] = repository;
   }
+  const repository = {
+    id,
+    title,
+    url,
+    techs,
+    likes: repositories[findByIndex].likes,
+  };
+  repositories[findByIndex] = repository;
+
   return response.json(repository);
 });
 
@@ -63,7 +63,15 @@ app.delete("/repositories/:id", (request, response) => {
 });
 
 app.post("/repositories/:id/like", (request, response) => {
-  // TODO
+  const { id } = request.params;
+  const findByIndex = repositories.findIndex(
+    (repository) => repository.id == id
+  );
+  if (findByIndex == -1) {
+    return response.status(400).json({ error: "Repository does not exist." });
+  }
+  repositories[findByIndex].likes++;
+  return response.json(repositories[findByIndex]);
 });
 
 module.exports = app;
